@@ -10,9 +10,13 @@ namespace Armadillo.Models
         public int Id { get; set; }
         public int Indice { get; set; }
 
+        public int IdTipo{ get; set; }
         public Tipo Tipo { get; set; }
 
         public string Nombre { get; set; }
+
+        public int IdHoja { get; set; }
+
         public Hoja Hoja { get; set; }
         public string Calculo { get; set; }
         public ICollection<Dato> Datos { get; set; }

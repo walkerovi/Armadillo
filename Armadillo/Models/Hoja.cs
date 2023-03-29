@@ -9,10 +9,12 @@ namespace Armadillo.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public int IdPrograma { get; set; }
         public Programa Programa { get; set; }
 
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
+
         public ICollection<Campo> Campos { get; set; }
     }
 }

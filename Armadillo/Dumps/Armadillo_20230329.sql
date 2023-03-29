@@ -222,13 +222,17 @@ DROP TABLE IF EXISTS `campo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `campo` (
-  `Id` int NOT NULL,
+  `Id` int NOT NULL AUTO_INCREMENT,
   `Indice` int NOT NULL,
+  `IdTipo` int NOT NULL,
   `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `IdHoja` int NOT NULL,
   `Calculo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`),
-  CONSTRAINT `FK_Campo_Hoja_Id` FOREIGN KEY (`Id`) REFERENCES `hoja` (`Id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_Campo_Tipo_Id` FOREIGN KEY (`Id`) REFERENCES `tipo` (`Id`) ON DELETE CASCADE
+  KEY `IX_Campo_IdHoja` (`IdHoja`),
+  KEY `IX_Campo_IdTipo` (`IdTipo`),
+  CONSTRAINT `FK_Campo_Hoja_IdHoja` FOREIGN KEY (`IdHoja`) REFERENCES `hoja` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_Campo_Tipo_IdTipo` FOREIGN KEY (`IdTipo`) REFERENCES `tipo` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -249,11 +253,13 @@ DROP TABLE IF EXISTS `dato`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dato` (
-  `Id` int NOT NULL,
+  `Id` int NOT NULL AUTO_INCREMENT,
   `Indice` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `IdCampo` int NOT NULL,
   `Valor` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`),
-  CONSTRAINT `FK_Dato_Campo_Id` FOREIGN KEY (`Id`) REFERENCES `campo` (`Id`) ON DELETE CASCADE
+  KEY `IX_Dato_IdCampo` (`IdCampo`),
+  CONSTRAINT `FK_Dato_Campo_IdCampo` FOREIGN KEY (`IdCampo`) REFERENCES `campo` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -274,11 +280,13 @@ DROP TABLE IF EXISTS `hoja`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hoja` (
-  `Id` int NOT NULL,
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `IdPrograma` int NOT NULL,
   `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Descripcion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`Id`),
-  CONSTRAINT `FK_Hoja_Programa_Id` FOREIGN KEY (`Id`) REFERENCES `programa` (`Id`) ON DELETE CASCADE
+  KEY `IX_Hoja_IdPrograma` (`IdPrograma`),
+  CONSTRAINT `FK_Hoja_Programa_IdPrograma` FOREIGN KEY (`IdPrograma`) REFERENCES `programa` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -335,7 +343,7 @@ CREATE TABLE `tipo` (
 
 LOCK TABLES `tipo` WRITE;
 /*!40000 ALTER TABLE `tipo` DISABLE KEYS */;
-INSERT INTO `tipo` VALUES (1,'Texto'),(2,'Entero'),(3,'Decimal'),(4,'Fecha'),(5,'Cálculo'),(6,'Lista');
+INSERT INTO `tipo` VALUES (1,'Texto'),(2,'Número Entero'),(3,'Número Decimal'),(4,'Fecha'),(5,'Cálculo'),(6,'Lista');
 /*!40000 ALTER TABLE `tipo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -348,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-29 14:56:00
+-- Dump completed on 2023-03-29 15:47:39

@@ -9,6 +9,7 @@ namespace Armadillo.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Indice { get; set; }
+        public int IdCampo { get; set; }
         public Campo Campo { get; set; }
         public string Valor { get; set; }
     }
