@@ -9,10 +9,8 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-
             @foreach (var item in Model) {
-                <div class="form-group">
+                <div class="form-group contenido">
                     <label for="@item.Nombre" class="control-label">@item.Nombre</label>
                     @{
                         var tipo = "";
@@ -41,15 +39,37 @@
                     }
                     @if (tipo == "list")
                     {
-                        @item.Nombre
+                        @item.Nombre/*Debo proveer de un select más adelante*/
                     }else
                     {
-                        <input type="@tipo" id="@item.Nombre" class="form-control" />
+                        <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
                     }
                 </div>
             }
-            
-        </form>
+            <div class="form-group">
+                <input type="button" value="Guardar" id="Guardar" />
+            </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+
+        $("#Guardar").click(function(){
+              var filas=[];
+              $("div.contenido").each(function(index){
+                var campo={};
+                campo["nombre"] = $(this).find("input").attr("name");
+                campo["valor"] = $(this).find("input").val();
+                filas.push(campo);
+              });
+              console.log(filas);
+              var procesado=JSON.stringify(filas);
+            $.post("@Url.Action("GuardarValoresHoja","Datos")", {campos:procesado}
+              ,function(respuesta){
+                console.log(respuesta);
+              });
+        });
+        
+    </script>
+}
 

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Armadillo.Data;
 using Armadillo.Models;
+using Armadillo.Models.ModelViews;
+using Newtonsoft.Json;
 
 namespace Armadillo.Controllers
 {
@@ -25,7 +27,12 @@ namespace Armadillo.Controllers
             return View(CamposHoja);
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> GuardarValoresHoja([FromBody] List<CampoJson> campos)
+        {
+            var otros = campos;
+            return Ok();
+        }
 
         // GET: Datos
         public async Task<IActionResult> Index()
