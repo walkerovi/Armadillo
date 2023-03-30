@@ -28,9 +28,10 @@ namespace Armadillo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GuardarValoresHoja([FromBody] List<CampoJson> campos)
+        public async Task<IActionResult> GuardarValoresHoja(/*[FromBody] List<CampoJson> campos*/)
         {
-            var otros = campos;
+            var otros = Request.Form.Keys.ToString();
+            var aburrido = JsonConvert.DeserializeObject<List<CampoJson>>(otros);
             return Ok();
         }
 

@@ -64,7 +64,7 @@
               });
               console.log(filas);
               var procesado=JSON.stringify(filas);
-            $.post("@Url.Action("GuardarValoresHoja","Datos")", {campos:procesado}
+            $.post("@Url.Action("GuardarValoresHoja","Datos")", procesado
               ,function(respuesta){
                 console.log(respuesta);
               });
