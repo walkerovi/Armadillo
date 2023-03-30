@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Armadillo.Models.Campo>
+
+@{
+    ViewData["Title"] = "LlenarHoja";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>LlenarHoja</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+
+            @foreach (var item in Model) {
+                <div class="form-group">
+                    <label for="@item.Nombre" class="control-label">@item.Nombre</label>
+                    @{
+                        var tipo = "";
+                    }
+                    @if (item.IdTipo == 2 || item.IdTipo == 3 || item.IdTipo==5)/*entero,decimal o cálculo*/
+                    {
+                        tipo = "number";
+                    }
+                    else
+                    {
+                        if (item.IdTipo == 4)/*fecha*/
+                        {
+                            tipo = "date";
+                        }
+                        else
+                        {
+                            if (item.IdTipo == 1)/*texto*/
+                            {
+                                tipo = "text";
+                            }
+                            else
+                            {
+                                tipo = "list";/*Es otra hoja enlazada*/
+                            }
+                        }
+                    }
+                    @if (tipo == "list")
+                    {
+                        @item.Nombre
+                    }else
+                    {
+                        <input type="@tipo" id="@item.Nombre" class="form-control" />
+                    }
+                </div>
+            }
+            
+        </form>
+    </div>
+</div>
+

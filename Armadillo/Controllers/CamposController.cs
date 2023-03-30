@@ -49,8 +49,8 @@ namespace Armadillo.Controllers
         // GET: Campos/Create
         public IActionResult Create()
         {
-            ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Id");
-            ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Id");
+            ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Nombre");
+            ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Nombre");
             return View();
         }
 
@@ -61,15 +61,10 @@ namespace Armadillo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Indice,IdTipo,Nombre,IdHoja,Calculo")] Campo campo)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(campo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Id", campo.IdHoja);
-            ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Id", campo.IdTipo);
-            return View(campo);
+            _context.Add(campo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            
         }
 
         // GET: Campos/Edit/5

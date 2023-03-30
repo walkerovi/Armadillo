@@ -18,6 +18,14 @@ namespace Armadillo.Controllers
         {
             _context = context;
         }
+        [HttpGet]
+        public async Task<IActionResult> LlenarHoja(int idHoja)
+        {
+            List<Campo> CamposHoja =await _context.Campo.Where(d=>d.IdHoja==idHoja).ToListAsync();
+            return View(CamposHoja);
+        }
+
+
 
         // GET: Datos
         public async Task<IActionResult> Index()
