@@ -28,11 +28,23 @@ namespace Armadillo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GuardarValoresHoja(/*[FromBody] List<CampoJson> campos*/)
+        public async Task<IActionResult> GuardarValoresHoja()
         {
-            var otros = Request.Form.Keys.ToString();
-            var aburrido = JsonConvert.DeserializeObject<List<CampoJson>>(otros);
-            return Ok();
+            var item =Request.Form.Keys.AsEnumerable().FirstOrDefault();
+            List<CampoJson> datos = JsonConvert.DeserializeObject<List<CampoJson>>(item);
+            foreach (CampoJson campo in datos)
+            {
+                Dato dato = new Dato();
+
+                var campocompleto =await _context.Campo.SingleAsync(d=>d.Nombre==campo.nombre);
+
+                dato.IdCampo =campocompleto.Id/*hay que buscarlo*/;
+                dato.Indice =campocompleto.Indice.ToString()/*del mismo campo se trae*/;
+                dato.Valor = campo.valor;
+                _context.Add(dato);
+            }
+            await _context.SaveChangesAsync();
+            return Ok("Se han guardado los datos");
         }
 
         // GET: Datos
