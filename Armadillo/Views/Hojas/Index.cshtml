@@ -4,45 +4,33 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="card">
+    <div class="card-header">
+        Hojas
+    </div>
+    <div class="card-body">
+        <p>
+            <a asp-action="Create">Nueva Hoja</a>
+        </p>
 
-<h1>Index</h1>
+        <div class="row">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Programa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Programa.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img src="~/images/hoja-Armadillo.jpg" class="card-img-top" alt="Programa">
+                        <div class="card-body">
+                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
+                            <p class="card-text">@Html.DisplayFor(modelItem => item.Descripcion)</p>
+                            <a href="@Url.ActionLink("Index","Campos",new{idHoja=item.Id})" class="btn btn-primary">Configurar</a>
+                            @*<a href="@Url.ActionLink("Index","Hojas",new{idPrograma=item.Id})" class="btn btn-primary">Abrir</a>*@
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>

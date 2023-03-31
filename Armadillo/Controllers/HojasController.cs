@@ -20,9 +20,9 @@ namespace Armadillo.Controllers
         }
 
         // GET: Hojas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int idPrograma)
         {
-            var applicationDbContext = _context.Hoja.Include(h => h.Programa);
+            var applicationDbContext = _context.Hoja.Include(h => h.Programa).Where(d=>d.IdPrograma==idPrograma);
             return View(await applicationDbContext.ToListAsync());
         }
 
