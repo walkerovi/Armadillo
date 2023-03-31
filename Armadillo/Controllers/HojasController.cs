@@ -12,9 +12,9 @@ namespace Armadillo.Controllers
 {
     public class HojasController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ArmadilloContext _context;
 
-        public HojasController(ApplicationDbContext context)
+        public HojasController(ArmadilloContext context)
         {
             _context = context;
         }

@@ -1,13 +1,20 @@
 using Armadillo.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configuracion para llamar a la Conexion de la BD en Appsetting.Json.
+string ConnectionStrings = builder.Configuration.GetConnectionString("Negocio");
+string ConnectionStringsSeguridad = builder.Configuration.GetConnectionString("Seguridad");
+
+builder.Services.AddDbContext<ArmadilloContext>(options =>
+           options.UseMySql(ConnectionStrings, ServerVersion.AutoDetect(ConnectionStrings)));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+                options.UseMySql(ConnectionStringsSeguridad, ServerVersion.AutoDetect(ConnectionStringsSeguridad)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -32,7 +39,7 @@ else
 /*Crea la base de datos cuando no existe*/
 using (var serviceScope = app.Services.CreateScope())
 {
-    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var context = serviceScope.ServiceProvider.GetRequiredService<ArmadilloContext>();
     context.Database.EnsureCreated();
 }
 

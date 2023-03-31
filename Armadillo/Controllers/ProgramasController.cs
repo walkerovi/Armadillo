@@ -12,9 +12,9 @@ namespace Armadillo.Controllers
 {
     public class ProgramasController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ArmadilloContext _context;
 
-        public ProgramasController(ApplicationDbContext context)
+        public ProgramasController(ArmadilloContext context)
         {
             _context = context;
         }

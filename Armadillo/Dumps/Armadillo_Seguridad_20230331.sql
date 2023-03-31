@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `armadillo` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `armadillo`;
+CREATE DATABASE  IF NOT EXISTS `armadillo_seguridad` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `armadillo_seguridad`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: localhost    Database: armadillo
+-- Host: localhost    Database: armadillo_seguridad
 -- ------------------------------------------------------
 -- Server version	8.0.32
 
@@ -213,139 +213,6 @@ LOCK TABLES `aspnetusertokens` WRITE;
 /*!40000 ALTER TABLE `aspnetusertokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `aspnetusertokens` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `campo`
---
-
-DROP TABLE IF EXISTS `campo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `campo` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Indice` int NOT NULL,
-  `IdTipo` int NOT NULL,
-  `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IdHoja` int NOT NULL,
-  `Calculo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `IX_Campo_IdHoja` (`IdHoja`),
-  KEY `IX_Campo_IdTipo` (`IdTipo`),
-  CONSTRAINT `FK_Campo_Hoja_IdHoja` FOREIGN KEY (`IdHoja`) REFERENCES `hoja` (`Id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_Campo_Tipo_IdTipo` FOREIGN KEY (`IdTipo`) REFERENCES `tipo` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `campo`
---
-
-LOCK TABLES `campo` WRITE;
-/*!40000 ALTER TABLE `campo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `campo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `dato`
---
-
-DROP TABLE IF EXISTS `dato`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dato` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Indice` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `IdCampo` int NOT NULL,
-  `Valor` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `IX_Dato_IdCampo` (`IdCampo`),
-  CONSTRAINT `FK_Dato_Campo_IdCampo` FOREIGN KEY (`IdCampo`) REFERENCES `campo` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dato`
---
-
-LOCK TABLES `dato` WRITE;
-/*!40000 ALTER TABLE `dato` DISABLE KEYS */;
-/*!40000 ALTER TABLE `dato` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `hoja`
---
-
-DROP TABLE IF EXISTS `hoja`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `hoja` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `IdPrograma` int NOT NULL,
-  `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Descripcion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `IX_Hoja_IdPrograma` (`IdPrograma`),
-  CONSTRAINT `FK_Hoja_Programa_IdPrograma` FOREIGN KEY (`IdPrograma`) REFERENCES `programa` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `hoja`
---
-
-LOCK TABLES `hoja` WRITE;
-/*!40000 ALTER TABLE `hoja` DISABLE KEYS */;
-/*!40000 ALTER TABLE `hoja` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `programa`
---
-
-DROP TABLE IF EXISTS `programa`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `programa` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Descripcion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `programa`
---
-
-LOCK TABLES `programa` WRITE;
-/*!40000 ALTER TABLE `programa` DISABLE KEYS */;
-/*!40000 ALTER TABLE `programa` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tipo`
---
-
-DROP TABLE IF EXISTS `tipo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tipo` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Nombre` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tipo`
---
-
-LOCK TABLES `tipo` WRITE;
-/*!40000 ALTER TABLE `tipo` DISABLE KEYS */;
-INSERT INTO `tipo` VALUES (1,'Texto'),(2,'Número Entero'),(3,'Número Decimal'),(4,'Fecha'),(5,'Cálculo'),(6,'Lista');
-/*!40000 ALTER TABLE `tipo` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -356,4 +223,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-29 15:47:39
+-- Dump completed on 2023-03-31 14:38:53

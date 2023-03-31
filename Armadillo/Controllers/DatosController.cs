@@ -14,9 +14,9 @@ namespace Armadillo.Controllers
 {
     public class DatosController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ArmadilloContext _context;
 
-        public DatosController(ApplicationDbContext context)
+        public DatosController(ArmadilloContext context)
         {
             _context = context;
         }
@@ -32,20 +32,56 @@ namespace Armadillo.Controllers
         {
             var item =Request.Form.Keys.AsEnumerable().FirstOrDefault();
             List<CampoJson> datos = JsonConvert.DeserializeObject<List<CampoJson>>(item);
+
+            /*entender la última fila que exista*/
+            var idCampoDefault = datos.FirstOrDefault().idCampo;
+            int noFila = 0;
+            bool tieneFila = _context.Campo.Include(d=>d.Datos).Single(d => d.Id == idCampoDefault).Datos.Any();
+            if (tieneFila)
+                noFila = _context.Campo.Include(d => d.Datos).Single(d => d.Id == idCampoDefault).Datos.OrderBy(d => d.NoFila).Last().NoFila + 1;
+            else
+                noFila = 1;
+
             foreach (CampoJson campo in datos)
             {
                 Dato dato = new Dato();
-
-                var campocompleto =await _context.Campo.SingleAsync(d=>d.Nombre==campo.nombre);
-
-                dato.IdCampo =campocompleto.Id/*hay que buscarlo*/;
-                dato.Indice =campocompleto.Indice.ToString()/*del mismo campo se trae*/;
+                var campocompleto = await _context.Campo.SingleAsync(d => d.Id == campo.idCampo);
+                dato.IdCampo =campo.idCampo/*hay que buscarlo*/;
+                dato.Indice =campocompleto.Indice/*del mismo campo se trae*/;
+                dato.NoFila = noFila;
                 dato.Valor = campo.valor;
                 _context.Add(dato);
             }
             await _context.SaveChangesAsync();
             return Ok("Se han guardado los datos");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MostrarDatos(int idHoja)
+        {
+            var hoja =await _context.Hoja.SingleAsync(d=>d.Id==idHoja);
+            List<string> cabeceras = new List<string>();
+            List<Campo> campos =await _context
+                .Campo
+                .Where(d=>d.IdHoja==idHoja)
+                .OrderBy(d=>d.Indice)
+                .ToListAsync();
+            foreach (var item in campos)
+                cabeceras.Add(item.Nombre);
+            List<Dato> datos =await _context.Dato.Include(d=>d.Campo).Where(d => d.Campo.IdHoja == idHoja).OrderBy(d=>d.Indice).ToListAsync();
+            Contenido contenido = new Contenido();
+            contenido.Campos = cabeceras;
+            contenido.Datos = datos;
+            contenido.Cantidadfila = datos.OrderBy(d => d.NoFila).Last().NoFila;
+            return View(contenido);
+        }
+
+
+
+
+
+        /*Generado por el framework*/
+
 
         // GET: Datos
         public async Task<IActionResult> Index()
