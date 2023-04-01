@@ -24,7 +24,7 @@
                             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
                             <p class="card-text">@Html.DisplayFor(modelItem => item.Descripcion)</p>
                             <a href="@Url.ActionLink("Index","Campos",new{idHoja=item.Id})" class="btn btn-primary">Configurar</a>
-                            @*<a href="@Url.ActionLink("Index","Hojas",new{idPrograma=item.Id})" class="btn btn-primary">Abrir</a>*@
+                            <a href="@Url.ActionLink("MostrarDatos","Datos",new{idHoja=item.Id})" class="btn btn-primary">Abrir</a>
                         </div>
                     </div>
                 </div>
