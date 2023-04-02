@@ -24,6 +24,8 @@ namespace Armadillo.Controllers
         public async Task<IActionResult> LlenarHoja(int idHoja)
         {
             List<Campo> CamposHoja =await _context.Campo.Where(d=>d.IdHoja==idHoja).ToListAsync();
+            Hoja hoja = _context.Hoja.Include(d => d.Programa).Single(d=>d.Id==idHoja);
+            ViewBag.Hoja= hoja;
             return View(CamposHoja);
         }
 
@@ -35,10 +37,11 @@ namespace Armadillo.Controllers
 
             /*entender la última fila que exista*/
             var idCampoDefault = datos.FirstOrDefault().idCampo;
+            Campo campoDefault = _context.Campo.Include(d => d.Datos).Single(d => d.Id == idCampoDefault);
             int noFila = 0;
-            bool tieneFila = _context.Campo.Include(d=>d.Datos).Single(d => d.Id == idCampoDefault).Datos.Any();
+            bool tieneFila = campoDefault.Datos.Any();
             if (tieneFila)
-                noFila = _context.Campo.Include(d => d.Datos).Single(d => d.Id == idCampoDefault).Datos.OrderBy(d => d.NoFila).Last().NoFila + 1;
+                noFila = campoDefault.Datos.OrderBy(d => d.NoFila).Last().NoFila + 1;
             else
                 noFila = 1;
 
@@ -53,13 +56,13 @@ namespace Armadillo.Controllers
                 _context.Add(dato);
             }
             await _context.SaveChangesAsync();
-            return Ok("Se han guardado los datos");
+            return RedirectToAction(nameof(MostrarDatos), new { idHoja = campoDefault.IdHoja });
         }
 
         [HttpGet]
         public async Task<IActionResult> MostrarDatos(int idHoja)
         {
-            var hoja =await _context.Hoja.SingleAsync(d=>d.Id==idHoja);
+            var hoja =await _context.Hoja.Include(d=>d.Programa).SingleAsync(d=>d.Id==idHoja);
             List<string> cabeceras = new List<string>();
             List<Campo> campos =await _context
                 .Campo
@@ -72,6 +75,10 @@ namespace Armadillo.Controllers
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = datos;
+            contenido.NombreHoja = hoja.Nombre;
+            contenido.idHoja = idHoja;
+            contenido.NombrePrograma = hoja.Programa.Nombre;
+
             contenido.Cantidadfila = datos.OrderBy(d => d.NoFila).Last().NoFila;
             return View(contenido);
         }

@@ -1,58 +1,67 @@
 ﻿@model IEnumerable<Armadillo.Models.Campo>
 
 @{
-    ViewData["Title"] = "LlenarHoja";
+    ViewData["Title"] = "Llenar Hoja";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>LlenarHoja</h1>
-
-<div class="row">
-    <div class="col-md-4">
-            @foreach (var item in Model) {
-                <div class="form-group contenido">
-                    <label for="@item.Nombre" class="control-label">@item.Nombre</label>
-                    @{
-                        var tipo = "";
-                    }
-                    @if (item.IdTipo == 2 || item.IdTipo == 3 || item.IdTipo==5)/*entero,decimal o cálculo*/
-                    {
-                        tipo = "number";
-                    }
-                    else
-                    {
-                        if (item.IdTipo == 4)/*fecha*/
+<div class="card">
+    <div class="card-header">
+        Nuevo Registro para hoja: <b>@ViewBag.Hoja.Nombre</b>, del Programa: <b>@ViewBag.Hoja.Programa.Nombre</b>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @foreach (var item in Model)
+                {
+                    <div class="form-group contenido">
+                        <label for="@item.Nombre" class="control-label">@item.Nombre</label>
+                        @{
+                            var tipo = "";
+                        }
+                        @if (item.IdTipo == 2 || item.IdTipo == 3 || item.IdTipo == 5)/*entero,decimal o cálculo*/
                         {
-                            tipo = "date";
+                            tipo = "number";
                         }
                         else
                         {
-                            if (item.IdTipo == 1)/*texto*/
+                            if (item.IdTipo == 4)/*fecha*/
                             {
-                                tipo = "text";
+                                tipo = "date";
                             }
                             else
                             {
-                                tipo = "list";/*Es otra hoja enlazada*/
+                                if (item.IdTipo == 1)/*texto*/
+                                {
+                                    tipo = "text";
+                                }
+                                else
+                                {
+                                    tipo = "list";/*Es otra hoja enlazada*/
+                                }
                             }
                         }
-                    }
-                    @if (tipo == "list")
-                    {
-                        @item.Nombre/*Debo proveer de un select más adelante*/
-                    }else
-                    {
-                        <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
-                    }
-                    <input type="hidden" name="idCampo" value="@item.Id">
+                        @if (tipo == "list")
+                        {
+                            @item.Nombre
+                            /*Debo proveer de un select más adelante*/
+                        }
+                        else
+                        {
+                            <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
+                        }
+                        <input type="hidden" name="idCampo" value="@item.Id">
+                    </div>
+                }
+                <div class="form-group">
+                    <p></p>
+                    <input type="button" class="btn btn-primary" value="Guardar" id="Guardar" />
                 </div>
-            }
-            <div class="form-group">
-                <p></p>
-                <input type="button" class="form-control" value="Guardar" id="Guardar" />
             </div>
+        </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
 

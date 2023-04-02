@@ -61,7 +61,7 @@ namespace Armadillo.Controllers
         {
             _context.Add(hoja);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { idPrograma = hoja.IdPrograma });
         }
 
         // GET: Hojas/Edit/5

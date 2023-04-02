@@ -63,7 +63,7 @@ namespace Armadillo.Controllers
         {
             _context.Add(campo);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index),new { idHoja = campo.IdHoja });
             
         }
 

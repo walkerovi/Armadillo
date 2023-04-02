@@ -1,20 +1,19 @@
 ﻿@model IEnumerable<Armadillo.Models.Hoja>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Hojas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="card">
     <div class="card-header">
-        Hojas
+        Hojas de <b>@Model.FirstOrDefault().Programa.Nombre</b>
     </div>
     <div class="card-body">
         <p>
-            <a asp-action="Create">Nueva Hoja</a>
+            <a asp-action="Create" class="btn btn-primary">Nueva Hoja</a>
         </p>
 
         <div class="row">
-
             @foreach (var item in Model)
             {
                 <div class="col-sm-3">
