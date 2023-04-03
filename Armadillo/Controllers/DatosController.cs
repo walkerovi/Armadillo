@@ -71,7 +71,11 @@ namespace Armadillo.Controllers
                 .ToListAsync();
             foreach (var item in campos)
                 cabeceras.Add(item.Nombre);
+
+
             List<Dato> datos =await _context.Dato.Include(d=>d.Campo).Where(d => d.Campo.IdHoja == idHoja).OrderBy(d=>d.Indice).ToListAsync();
+            
+            
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = datos;

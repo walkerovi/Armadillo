@@ -23,6 +23,8 @@ namespace Armadillo.Controllers
         public async Task<IActionResult> Index(int idHoja)
         {
             var applicationDbContext = _context.Campo.Include(c => c.Hoja).Include(c => c.Tipo).Where(d=>d.IdHoja== idHoja);
+            Hoja hoja = _context.Hoja.Include(d => d.Programa).Single(d => d.Id == idHoja);
+            ViewBag.Hoja = hoja;
             return View(await applicationDbContext.ToListAsync());
         }
 
