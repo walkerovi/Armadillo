@@ -9,6 +9,7 @@ using Armadillo.Data;
 using Armadillo.Models;
 using Armadillo.Models.ModelViews;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 namespace Armadillo.Controllers
 {
@@ -78,7 +79,7 @@ namespace Armadillo.Controllers
             
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
-            contenido.Datos = datos;
+            contenido.Datos = EjecutarFormula(datos);
             contenido.NombreHoja = hoja.Nombre;
             contenido.idHoja = idHoja;
             contenido.NombrePrograma = hoja.Programa.Nombre;
@@ -87,7 +88,29 @@ namespace Armadillo.Controllers
             return View(contenido);
         }
 
-
+        /*Implementar para ingresar fórmulas*/
+        private List<Dato> EjecutarFormula(List<Dato> datos)
+        {
+            foreach (var dato in datos)
+            {   /*datos del campo*/
+                if (dato.Campo.IdTipo == 5)/*si es cálculo se va a trabajar*/
+                {
+                    /*ahora sustituir los datos*/
+                    var todosloscamposutilizar = datos
+                        .Where(c => c.NoFila == dato.NoFila)
+                        .OrderBy(d=>d.Indice)
+                        .ToList();/*sub lista, de la misma fila*/
+                    string expression = dato.Campo.Calculo;
+                    foreach (var item in todosloscamposutilizar)
+                        expression = expression.Replace(item.Campo.Nombre, item.Valor);
+                    System.Data.DataTable table = new System.Data.DataTable();
+                    object result = table.Compute(expression, string.Empty);
+                    var respuesta = Convert.ToDouble(result);
+                    dato.Valor = respuesta.ToString();
+                }
+            }
+            return datos;
+        }
 
 
 
