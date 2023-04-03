@@ -26,6 +26,8 @@ namespace Armadillo.Controllers
         {
             List<Campo> CamposHoja =await _context.Campo.Where(d=>d.IdHoja==idHoja).ToListAsync();
             Hoja hoja = _context.Hoja.Include(d => d.Programa).Single(d=>d.Id==idHoja);
+            List<Hoja> hojas = _context.Hoja.Where(d => d.IdPrograma == hoja.IdPrograma).AsNoTracking().ToList();/*solo las hojas del mismo programa*/
+            ViewBag.Hojas = new SelectList(hojas, "Id", "Nombre");
             ViewBag.Hoja= hoja;
             return View(CamposHoja);
         }
@@ -72,18 +74,18 @@ namespace Armadillo.Controllers
                 .ToListAsync();
             foreach (var item in campos)
                 cabeceras.Add(item.Nombre);
-
-
-            List<Dato> datos =await _context.Dato.Include(d=>d.Campo).Where(d => d.Campo.IdHoja == idHoja).OrderBy(d=>d.Indice).ToListAsync();
-            
-            
+            List<Dato> datos =await _context
+                .Dato
+                .Include(d=>d.Campo)
+                .Where(d => d.Campo.IdHoja == idHoja)
+                .OrderBy(d=>d.Indice)
+                .ToListAsync();
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = EjecutarFormula(datos);
             contenido.NombreHoja = hoja.Nombre;
             contenido.idHoja = idHoja;
             contenido.NombrePrograma = hoja.Programa.Nombre;
-
             contenido.Cantidadfila = datos.OrderBy(d => d.NoFila).Last().NoFila;
             return View(contenido);
         }
@@ -111,8 +113,6 @@ namespace Armadillo.Controllers
             }
             return datos;
         }
-
-
 
         /*Generado por el framework*/
 

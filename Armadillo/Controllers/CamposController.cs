@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Armadillo.Data;
 using Armadillo.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Armadillo.Controllers
 {
@@ -49,9 +50,10 @@ namespace Armadillo.Controllers
         }
 
         // GET: Campos/Create
-        public IActionResult Create()
+        public IActionResult Create(int idHoja)
         {
-            ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Nombre");
+            //ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Nombre");
+            ViewBag.Hoja = _context.Hoja.Include(c=>c.Programa).AsNoTracking().Single(t=>t.Id==idHoja);
             ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Nombre");
             return View();
         }

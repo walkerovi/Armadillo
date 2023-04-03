@@ -1,50 +1,47 @@
 ﻿@model Armadillo.Models.Campo
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo campo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Campo</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Indice" class="control-label"></label>
-                <input asp-for="Indice" class="form-control" />
-                <span asp-validation-for="Indice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdTipo" class="control-label"></label>
-                <select asp-for="IdTipo" class ="form-control" asp-items="ViewBag.IdTipo"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdHoja" class="control-label"></label>
-                <select asp-for="IdHoja" class ="form-control" asp-items="ViewBag.IdHoja"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Calculo" class="control-label"></label>
-                <input asp-for="Calculo" class="form-control" />
-                <span asp-validation-for="Calculo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="card">
+    <div class="card-header">
+        Nuevo campo para la Hoja: <b>@ViewBag.Hoja.Nombre</b> de Programa: <b>@ViewBag.Hoja.Programa.Nombre</b>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="IdHoja" id="IdHoja" value="@ViewBag.Hoja.Id" >
+                    <div class="form-group">
+                        <label asp-for="Indice" class="control-label">Índice</label>
+                        <input asp-for="Indice" class="form-control" />
+                        <span asp-validation-for="Indice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IdTipo" class="control-label">Tipo de dato</label>
+                        <select asp-for="IdTipo" class="form-control" asp-items="ViewBag.IdTipo"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Nombre" class="control-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Calculo" class="control-label">Cálculo</label>
+                        <input asp-for="Calculo" class="form-control" />
+                        <span asp-validation-for="Calculo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <p></p>
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

@@ -43,8 +43,9 @@
                         }
                         @if (tipo == "list")
                         {
-                            @item.Nombre
-                            /*Debo proveer de un select más adelante*/
+                            <select id="@item.Nombre" name="@item.Nombre" class="form-control" asp-items="@ViewBag.Cajeros">
+                                <option value="0">Seleccione Hoja para enlazar</option>
+                            </select>
                         }
                         else
                         {
