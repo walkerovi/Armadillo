@@ -52,9 +52,11 @@ namespace Armadillo.Controllers
         // GET: Campos/Create
         public IActionResult Create(int idHoja)
         {
-            //ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Nombre");
-            ViewBag.Hoja = _context.Hoja.Include(c=>c.Programa).AsNoTracking().Single(t=>t.Id==idHoja);
+            Hoja hoja = _context.Hoja.Include(c => c.Programa).AsNoTracking().Single(t => t.Id == idHoja);
+            ViewBag.Hoja = hoja;
             ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Nombre");
+            var hojas = _context.Hoja.AsNoTracking().Where(d => d.IdPrograma == hoja.IdPrograma);/*solo debe ser por ahora del programa seleccionado*/
+            ViewData["IdHoja"] = new SelectList(hojas, "Id", "Nombre");/*Hoja hija*/
             return View();
         }
 
