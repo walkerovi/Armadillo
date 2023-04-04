@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <p>
-            <a asp-action="Create" class="btn btn-primary">Nueva Hoja</a>
+            <a href="@Url.ActionLink("Create","Hojas",new{idPrograma=Model.FirstOrDefault().IdPrograma})" class="btn btn-primary">Nueva hoja</a>
         </p>
 
         <div class="row">

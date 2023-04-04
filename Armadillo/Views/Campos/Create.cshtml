@@ -56,8 +56,11 @@
     <script>
         $(function () {
             $('#HojaLista').hide();
-            $('#IdHoja').change(function () {
-                var selectVal = $("#IdHoja option:selected").val();
+            $('#IdTipo').change(function () {
+                var selectVal = $("#IdTipo option:selected").val();
+
+                console.log("Cambió: "+selectVal);
+
                 if (selectVal == "6") {
                     $('#HojaLista').show();
                 } else {

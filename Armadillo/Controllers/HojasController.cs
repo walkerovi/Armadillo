@@ -46,9 +46,10 @@ namespace Armadillo.Controllers
         }
 
         // GET: Hojas/Create
-        public IActionResult Create()
+        public IActionResult Create(int idPrograma)
         {
-            ViewData["IdPrograma"] = new SelectList(_context.Programa, "Id", "Nombre");
+            Programa programa = _context.Programa.Single(d=>d.Id==idPrograma);
+            ViewBag.Programa = programa;
             return View();
         }
 
