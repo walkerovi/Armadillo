@@ -58,11 +58,9 @@
             $('#HojaLista').hide();
             $('#IdTipo').change(function () {
                 var selectVal = $("#IdTipo option:selected").val();
-
-                console.log("Cambió: "+selectVal);
-
                 if (selectVal == "6") {
                     $('#HojaLista').show();
+                    $("#Calculo").val(selectVal);
                 } else {
                     $('#HojaLista').hide();
                 }

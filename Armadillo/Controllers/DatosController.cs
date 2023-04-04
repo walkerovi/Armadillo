@@ -86,9 +86,17 @@ namespace Armadillo.Controllers
             contenido.NombreHoja = hoja.Nombre;
             contenido.idHoja = idHoja;
             contenido.NombrePrograma = hoja.Programa.Nombre;
-            contenido.Cantidadfila = datos.OrderBy(d => d.NoFila).Last().NoFila;
+            contenido.Cantidadfila = datos.Count>0? datos.OrderBy(d => d.NoFila).Last().NoFila:0;
             return View(contenido);
         }
+
+        /*Mostrar datos complejos, padre con hijo*/
+        [HttpGet]
+        public async Task<IActionResult> MostrarDatosComplejos(int idDato)
+        {
+            return View();
+        }
+
 
         /*Implementar para ingresar fórmulas*/
         private List<Dato> EjecutarFormula(List<Dato> datos)

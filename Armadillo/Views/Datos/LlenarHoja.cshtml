@@ -15,7 +15,6 @@
                 @foreach (var item in Model)
                 {
                     <div class="form-group contenido">
-                        <label for="@item.Nombre" class="control-label">@item.Nombre</label>
                         @{
                             var tipo = "";
                         }
@@ -36,20 +35,35 @@
                                     tipo = "text";
                                 }
                                 else
-                                {
-                                    tipo = "list";/*Es otra hoja enlazada*/
+                                {/*Es otra hoja enlazada*/
+                                    if (item.IdTipo == 6)
+                                    {
+                                        tipo = "Lista";
+                                    }
+                                    if (item.IdTipo == 7)
+                                    {
+                                        tipo = "Detalle";
+                                    }
                                 }
                             }
                         }
-                        @if (tipo == "list")
+
+                        @if (tipo == "Lista")
                         {
-                            <select id="@item.Nombre" name="@item.Nombre" class="form-control" asp-items="@ViewBag.Cajeros">
-                                <option value="0">Seleccione Hoja para enlazar</option>
-                            </select>
+                            <p></p>
+                            <p>Lista de: @item.Nombre </p>
                         }
                         else
                         {
-                            <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
+                            if (tipo == "Detalle")
+                            {
+                                <p></p>
+                                <p>Detalle </p>
+                            }else
+                            {
+                                <label for="@item.Nombre" class="control-label">@item.Nombre</label>
+                                <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
+                            }
                         }
                         <input type="hidden" name="idCampo" value="@item.Id">
                     </div>
