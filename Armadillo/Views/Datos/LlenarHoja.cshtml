@@ -59,6 +59,7 @@
                             {
                                 <p></p>
                                 <p>Detalle </p>
+                                <input type="hidden" name="idCampo" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
                             }else
                             {
                                 <label for="@item.Nombre" class="control-label">@item.Nombre</label>
@@ -93,7 +94,7 @@
               var procesado=JSON.stringify(filas);
             $.post("@Url.Action("GuardarValoresHoja","Datos")", procesado
               ,function(respuesta){
-                console.log(respuesta);
+
               });
         });
         

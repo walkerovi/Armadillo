@@ -22,11 +22,16 @@ namespace Armadillo.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> LlenarHoja(int idHoja)
+        public async Task<IActionResult> LlenarHoja(int idHoja, int idHojaForanea = 0, int noFilaForanea = 0)
         {
+            ViewBag.idHoja = idHoja;
+            ViewBag.idHojaForanea = idHojaForanea;
+            ViewBag.noFilaForanea = noFilaForanea;
+
             List<Campo> CamposHoja =await _context.Campo.Where(d=>d.IdHoja==idHoja).ToListAsync();
             Hoja hoja = _context.Hoja.Include(d => d.Programa).Single(d=>d.Id==idHoja);
             List<Hoja> hojas = _context.Hoja.Where(d => d.IdPrograma == hoja.IdPrograma).AsNoTracking().ToList();/*solo las hojas del mismo programa*/
+
             ViewBag.Hojas = new SelectList(hojas, "Id", "Nombre");
             ViewBag.Hoja= hoja;
             return View(CamposHoja);
@@ -59,13 +64,15 @@ namespace Armadillo.Controllers
                 _context.Add(dato);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(MostrarDatos), new { idHoja = campoDefault.IdHoja });
+            return Ok("Es correcto");
         }
 
         [HttpGet]
         public async Task<IActionResult> MostrarDatos(int idHoja,int idHojaForanea = 0, int noFilaForanea=0)
         {
-            ViewBag.IdHojaForanea = idHojaForanea;
+            ViewBag.idHoja = idHoja;
+            ViewBag.idHojaForanea = idHojaForanea;
+            ViewBag.noFilaForanea = noFilaForanea;
             if (idHojaForanea > 0)
             {
                 Contenido contenidoForaneo = new Contenido();
@@ -87,9 +94,7 @@ namespace Armadillo.Controllers
             var hoja = await _context.Hoja.Include(d => d.Programa).SingleAsync(d => d.Id == idHoja);
             List<string> cabeceras = new List<string>();
             List<Campo> campos = new List<Campo>();
-
             List<Dato> datos = new List<Dato>();
-
             if (idHojaForanea > 0 && !EsDetalle)
             {
                 campos = await _context
@@ -122,10 +127,9 @@ namespace Armadillo.Controllers
                     datos = await _context
                     .Dato
                     .Include(d => d.Campo)
-                    .Where(d => d.Campo.IdHoja == idHoja && d.IdCampo == 7 && d.Valor == dupla)
+                    .Where(d => d.Campo.IdHoja == idHoja /*&& d.Valor == dupla*/)
                     .OrderBy(d => d.Indice)
                     .ToListAsync();
-
                 }
                 else
                     datos = await _context
@@ -135,9 +139,7 @@ namespace Armadillo.Controllers
                     .OrderBy(d => d.Indice)
                     .ToListAsync();
             }
-                
-
-
+               
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = EjecutarFormula(datos);
