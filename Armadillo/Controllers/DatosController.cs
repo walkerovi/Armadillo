@@ -69,9 +69,9 @@ namespace Armadillo.Controllers
             if (idHojaForanea > 0)
             {
                 Contenido contenidoForaneo = new Contenido();
-                contenidoForaneo = await ObtenerContenido(idHojaForanea, 0, noFilaForanea);
+                contenidoForaneo = await ObtenerContenido(idHoja, idHojaForanea, noFilaForanea);
                 ViewBag.ContenidoForanea = contenidoForaneo;
-                Contenido contenido = await ObtenerContenido(idHoja, idHojaForanea, noFilaForanea);
+                Contenido contenido = await ObtenerContenido(idHoja, idHojaForanea, noFilaForanea,true);
                 return View(contenido);
             }
             else
@@ -81,7 +81,8 @@ namespace Armadillo.Controllers
         private async Task<Contenido> ObtenerContenido(
             int idHoja, 
             int idHojaForanea=0,
-            int noFilaForanea = 0)
+            int noFilaForanea = 0,
+            bool EsDetalle=false)
         {
             var hoja = await _context.Hoja.Include(d => d.Programa).SingleAsync(d => d.Id == idHoja);
             List<string> cabeceras = new List<string>();
@@ -89,7 +90,7 @@ namespace Armadillo.Controllers
 
             List<Dato> datos = new List<Dato>();
 
-            if (idHojaForanea > 0)
+            if (idHojaForanea > 0 && !EsDetalle)
             {
                 campos = await _context
                 .Campo
@@ -115,8 +116,7 @@ namespace Armadillo.Controllers
                 .ToListAsync();
                 foreach (var item in campos)
                     cabeceras.Add(item.Nombre);
-
-                if (idHojaForanea > 0)
+                if (idHojaForanea > 0 && EsDetalle)
                 {
                     string dupla = string.Format("{0},{1}", idHojaForanea, noFilaForanea);
                     datos = await _context
@@ -125,6 +125,7 @@ namespace Armadillo.Controllers
                     .Where(d => d.Campo.IdHoja == idHoja && d.IdCampo == 7 && d.Valor == dupla)
                     .OrderBy(d => d.Indice)
                     .ToListAsync();
+
                 }
                 else
                     datos = await _context
