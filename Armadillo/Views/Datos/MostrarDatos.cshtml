@@ -1,4 +1,5 @@
-﻿@model Armadillo.Models.ModelViews.Contenido
+﻿@using Armadillo.Models.ModelViews;
+@model Armadillo.Models.ModelViews.Contenido
 
 @{
     ViewData["Title"] = "MostrarDatos";
@@ -13,30 +14,98 @@
         <p>
             <a href="@Url.ActionLink("LlenarHoja","Datos",new{idHoja=Model.idHoja})" class="btn btn-primary">Nuevo registro</a>
         </p>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    @foreach (var campo in Model.Campos)
-                    {
-                        <th>
-                            @campo
-                        </th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i <= Model.Cantidadfila; i++)
-                {
+
+        @if (ViewBag.IdHojaForanea > 0)
+        {
+            <span>Contenido Padre</span>
+            <table class="table table-striped table-hover">
+                <thead>
                     <tr>
-                        @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
+                        @foreach (var campo in ViewBag.ContenidoForanea.Campos)
                         {
-                            <td>
-                                @dato.Valor
-                            </td>
+                            <th>
+                                @campo
+                            </th>
                         }
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i <=ViewBag.ContenidoForanea.Cantidadfila; i++)
+                    {
+                        <tr>
+                            @foreach (var dato in ((Contenido)ViewBag.ContenidoForanea).Datos.Where(d => d.NoFila == i))
+                            {
+                                <td>
+                                    @dato.Valor
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <hr />
+            <span>Contenido Detalle</span>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        @foreach (var campo in Model.Campos)
+                        {
+                            <th>
+                                @campo
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i <= Model.Cantidadfila; i++)
+                    {
+                        <tr>
+                            @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
+                            {
+                                <td>
+                                    @dato.Valor
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }else
+        {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        @foreach (var campo in Model.Campos)
+                        {
+                            <th>
+                                @campo
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 1; i <= Model.Cantidadfila; i++)
+                    {
+                        <tr>
+                            @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
+                            {
+                                if (dato.Campo.IdTipo == 6)
+                                {
+                                    <td>
+                                        <a href="@Url.Action("MostrarDatos","Datos",new{idHoja=dato.Campo.Calculo,idHojaForanea=dato.Campo.IdHoja,noFilaForanea=dato.NoFila})">@dato.Campo.Nombre</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @dato.Valor
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>

@@ -8,5 +8,7 @@
         public string NombreHoja { get; set; }
         public string NombrePrograma { get; set; }
         public int idHoja { get; set; }
+        
     }
+
 }

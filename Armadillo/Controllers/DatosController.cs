@@ -63,40 +63,90 @@ namespace Armadillo.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MostrarDatos(int idHoja)
+        public async Task<IActionResult> MostrarDatos(int idHoja,int idHojaForanea = 0, int noFilaForanea=0)
         {
-            var hoja =await _context.Hoja.Include(d=>d.Programa).SingleAsync(d=>d.Id==idHoja);
+            ViewBag.IdHojaForanea = idHojaForanea;
+            if (idHojaForanea > 0)
+            {
+                Contenido contenidoForaneo = new Contenido();
+                contenidoForaneo = await ObtenerContenido(idHojaForanea, 0, noFilaForanea);
+                ViewBag.ContenidoForanea = contenidoForaneo;
+                Contenido contenido = await ObtenerContenido(idHoja, idHojaForanea, noFilaForanea);
+                return View(contenido);
+            }
+            else
+                return View(await ObtenerContenido(idHoja));
+        }
+
+        private async Task<Contenido> ObtenerContenido(
+            int idHoja, 
+            int idHojaForanea=0,
+            int noFilaForanea = 0)
+        {
+            var hoja = await _context.Hoja.Include(d => d.Programa).SingleAsync(d => d.Id == idHoja);
             List<string> cabeceras = new List<string>();
-            List<Campo> campos =await _context
+            List<Campo> campos = new List<Campo>();
+
+            List<Dato> datos = new List<Dato>();
+
+            if (idHojaForanea > 0)
+            {
+                campos = await _context
                 .Campo
-                .Where(d=>d.IdHoja==idHoja)
-                .OrderBy(d=>d.Indice)
+                .Where(d => d.IdHoja == idHojaForanea)
+                .OrderBy(d => d.Indice)
                 .ToListAsync();
-            foreach (var item in campos)
-                cabeceras.Add(item.Nombre);
-            List<Dato> datos =await _context
+                foreach (var item in campos)
+                    cabeceras.Add(item.Nombre);
+
+                datos = await _context
                 .Dato
-                .Include(d=>d.Campo)
-                .Where(d => d.Campo.IdHoja == idHoja)
-                .OrderBy(d=>d.Indice)
+                .Include(d => d.Campo)
+                .Where(d => d.Campo.IdHoja == idHojaForanea && d.NoFila == noFilaForanea)
+                .OrderBy(d => d.Indice)
                 .ToListAsync();
+            }
+            else
+            {
+                campos = await _context
+                .Campo
+                .Where(d => d.IdHoja == idHoja)
+                .OrderBy(d => d.Indice)
+                .ToListAsync();
+                foreach (var item in campos)
+                    cabeceras.Add(item.Nombre);
+
+                if (idHojaForanea > 0)
+                {
+                    string dupla = string.Format("{0},{1}", idHojaForanea, noFilaForanea);
+                    datos = await _context
+                    .Dato
+                    .Include(d => d.Campo)
+                    .Where(d => d.Campo.IdHoja == idHoja && d.IdCampo == 7 && d.Valor == dupla)
+                    .OrderBy(d => d.Indice)
+                    .ToListAsync();
+                }
+                else
+                    datos = await _context
+                    .Dato
+                    .Include(d => d.Campo)
+                    .Where(d => d.Campo.IdHoja == idHoja)
+                    .OrderBy(d => d.Indice)
+                    .ToListAsync();
+            }
+                
+
+
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = EjecutarFormula(datos);
             contenido.NombreHoja = hoja.Nombre;
             contenido.idHoja = idHoja;
             contenido.NombrePrograma = hoja.Programa.Nombre;
-            contenido.Cantidadfila = datos.Count>0? datos.OrderBy(d => d.NoFila).Last().NoFila:0;
-            return View(contenido);
-        }
+            contenido.Cantidadfila = datos.Count > 0 ? datos.OrderBy(d => d.NoFila).Last().NoFila : 0;
 
-        /*Mostrar datos complejos, padre con hijo*/
-        [HttpGet]
-        public async Task<IActionResult> MostrarDatosComplejos(int idDato)
-        {
-            return View();
+            return contenido;
         }
-
 
         /*Implementar para ingresar fórmulas*/
         private List<Dato> EjecutarFormula(List<Dato> datos)
