@@ -124,12 +124,28 @@ namespace Armadillo.Controllers
                 if (idHojaForanea > 0 && EsDetalle)
                 {
                     string dupla = string.Format("{0},{1}", idHojaForanea, noFilaForanea);
-                    datos = await _context
+                    var lasFilas = _context
                     .Dato
+                    .AsNoTracking()
                     .Include(d => d.Campo)
-                    .Where(d => d.Campo.IdHoja == idHoja /*&& d.Valor == dupla*/)
+                    .Where(d => d.Campo.IdHoja == idHoja && d.Valor == dupla)
                     .OrderBy(d => d.Indice)
-                    .ToListAsync();
+                    .Select(d=>d.NoFila)
+                    .ToList();
+
+                    datos = new List<Dato>();/*reset el objeto*/
+
+                    foreach (var item in lasFilas)
+                    {
+                        var datoFila = _context
+                            .Dato
+                            .AsNoTracking()
+                            .Include(d => d.Campo)
+                            .Single(d => d.Campo.IdHoja == idHoja && d.NoFila == item);
+                        if(datoFila != null)
+                            datos.Add(datoFila);
+                    }
+                    datos = datos.OrderBy(d=>d.Indice).ToList();
                 }
                 else
                     datos = await _context
