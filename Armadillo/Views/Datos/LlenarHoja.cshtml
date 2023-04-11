@@ -59,7 +59,7 @@
                             {
                                 <p></p>
                                 <p>Detalle </p>
-                                <input type="hidden" name="idCampo" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
+                                <input type="hidden" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
                             }else
                             {
                                 <label for="@item.Nombre" class="control-label">@item.Nombre</label>

@@ -45,7 +45,7 @@
             <hr />
             <span>Contenido Detalle</span>
             <p>
-                <a href="@Url.ActionLink("LlenarHoja","Datos",new{idHoja=Model.idHoja})" class="btn btn-primary">Nuevo registro</a>
+                <a href="@Url.ActionLink("LlenarHoja","Datos",new{idHoja=ViewBag.idHoja,idHojaForanea=ViewBag.idHojaForanea,noFilaForanea=ViewBag.noFilaForanea})" class="btn btn-primary">Nuevo registro detalle</a>
             </p>
             <table class="table table-striped table-hover">
                 <thead>
@@ -75,7 +75,7 @@
         }else
         {
             <p>
-                <a href="@Url.ActionLink("LlenarHoja","Datos",new{idHoja=ViewBag.idHoja,idHojaForanea=ViewBag.idHojaForanea,noFilaForanea=ViewBag.noFilaForanea})" class="btn btn-primary">Nuevo registro detalle</a>
+                <a href="@Url.ActionLink("LlenarHoja","Datos",new{idHoja=Model.idHoja})" class="btn btn-primary">Nuevo registro</a>
             </p>
 
             <table class="table table-striped table-hover">
