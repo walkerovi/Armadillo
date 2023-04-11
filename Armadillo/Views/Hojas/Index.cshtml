@@ -6,11 +6,11 @@
 }
 <div class="card">
     <div class="card-header">
-        Hojas de <b>@Model.FirstOrDefault().Programa.Nombre</b>
+        Hojas de <b>@ViewBag.Programa.Nombre</b>
     </div>
     <div class="card-body">
         <p>
-            <a href="@Url.ActionLink("Create","Hojas",new{idPrograma=Model.FirstOrDefault().IdPrograma})" class="btn btn-primary">Nueva hoja</a>
+            <a href="@Url.ActionLink("Create","Hojas",new{idPrograma=ViewBag.Programa.Id})" class="btn btn-primary">Nueva hoja</a>
         </p>
 
         <div class="row">
