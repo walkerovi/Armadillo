@@ -141,7 +141,7 @@ namespace Armadillo.Controllers
                             .Dato
                             .AsNoTracking()
                             .Include(d => d.Campo)
-                            .Single(d => d.Campo.IdHoja == idHoja && d.NoFila == item);
+                            .FirstOrDefault(d => d.Campo.IdHoja == idHoja && d.NoFila == item);
                         if(datoFila != null)
                             datos.Add(datoFila);
                     }

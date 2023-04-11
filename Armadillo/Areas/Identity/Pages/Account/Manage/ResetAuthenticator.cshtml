@@ -1,0 +1,26 @@
+﻿@page
+@model ResetAuthenticatorModel
+@{
+    ViewData["Title"] = "Reiniciar llave del autenticador";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<h3>@ViewData["Title"]</h3>
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign"></span>
+        <strong>
+            Si tu reiniciaste la llave del autenticador tu aplicación de autenticación no funcionará hasta que lo reconfigures
+        </strong>
+    </p>
+    <p>
+        Este proceso deshabilita el doble factor hasta que tu verifiques tu app de autenticación.
+        Si no completas la configuración de tu app de autenticación perderás el acceso a tu cuenta.
+    </p>
+</div>
+<div>
+    <form id="reset-authenticator-form" method="post">
+        <button id="reset-authenticator-button" class="btn btn-danger" type="submit">Reiniciar llave de autenticación</button>
+    </form>
+</div>
