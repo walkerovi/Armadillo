@@ -52,11 +52,40 @@ namespace Armadillo.Controllers
         // GET: Campos/Create
         public IActionResult Create(int idHoja)
         {
-            Hoja hoja = _context.Hoja.Include(c => c.Programa).AsNoTracking().Single(t => t.Id == idHoja);
+            Hoja hoja = _context
+                .Hoja
+                .Include(d=>d.Campos)
+                .Include(c => c.Programa).AsNoTracking()
+                .Single(t => t.Id == idHoja);
             ViewBag.Hoja = hoja;
+            int UltimoIndice = 0;
+            if (hoja != null)
+            { 
+                if(hoja.Campos.Count>0)
+                    UltimoIndice= hoja.Campos.OrderBy(d => d.Indice).Last().Indice;
+            }
+            ViewBag.UltimoCampo = UltimoIndice+1;
             ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Nombre");
             var hojas = _context.Hoja.AsNoTracking().Where(d => d.IdPrograma == hoja.IdPrograma);/*solo debe ser por ahora del programa seleccionado*/
             ViewData["IdHoja"] = new SelectList(hojas, "Id", "Nombre");/*Hoja hija*/
+
+            /*servir lista de campos para elegir un campo foráneo*/
+            if (hoja != null)
+            {
+                var campos = hoja.Campos;
+                if (campos.Count > 0)
+                {
+                    var campo_foraneo = campos.Single(d=>d.IdTipo==7);/*7 es para detalle*/
+                    if (campo_foraneo != null)
+                    {
+                        int idHojaForanea = Convert.ToInt32(campo_foraneo.Calculo);
+                        var CamposForaneos = _context.Campo.AsNoTracking().Where(d=>d.IdHoja== idHojaForanea && d.IdTipo!=6 && d.IdTipo != 7);
+
+                        ViewData["IdCampoForaneo"] = new SelectList(CamposForaneos, "Id", "Nombre");
+                    }
+                }
+            }
+
             return View();
         }
 

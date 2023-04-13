@@ -44,6 +44,10 @@
                                     {
                                         tipo = "Detalle";
                                     }
+                                    if (item.IdTipo == 8)
+                                    {
+                                        tipo = "Foraneo";
+                                    }
                                 }
                             }
                         }
@@ -62,8 +66,16 @@
                                 <input type="hidden" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
                             }else
                             {
-                                <label for="@item.Nombre" class="control-label">@item.Nombre</label>
-                                <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
+                                if (tipo == "Foraneo")
+                                {
+                                    <p></p>
+                                    <p>Campo Foráneo: @item.Nombre </p>
+                                }
+                                else
+                                {
+                                    <label for="@item.Nombre" class="control-label">@item.Nombre</label>
+                                    <input type="@tipo" id="@item.Nombre" name="@item.Nombre" class="form-control" />
+                                }
                             }
                         }
                         <input type="hidden" name="idCampo" value="@item.Id">

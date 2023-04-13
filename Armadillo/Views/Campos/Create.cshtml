@@ -15,11 +15,7 @@
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" name="IdHoja" id="IdHoja" value="@ViewBag.Hoja.Id" >
-                    <div class="form-group">
-                        <label asp-for="Indice" class="control-label">Índice</label>
-                        <input asp-for="Indice" class="form-control" />
-                        <span asp-validation-for="Indice" class="text-danger"></span>
-                    </div>
+                    <input type="hidden" name="Indice" id="Indice" value="@ViewBag.UltimoCampo">
                     <div class="form-group">
                         <label asp-for="IdTipo" class="control-label">Tipo de dato</label>
                         <select asp-for="IdTipo" class="form-control" asp-items="ViewBag.IdTipo"></select>
@@ -28,6 +24,11 @@
                     <div class="form-group" id="HojaLista">
                         <label for="IdHoja" class="control-label">Hoja como Lista</label>
                         <select id="IdHoja" class="form-control" asp-items="ViewBag.IdHoja"></select>
+                    </div>
+
+                    <div class="form-group" id="CampoForaneo">
+                        <label for="IdCampoForaneo" class="control-label">Campo Foráneo</label>
+                        <select id="IdCampoForaneo" class="form-control" asp-items="ViewBag.IdCampoForaneo"></select>
                     </div>
 
                     <div class="form-group">
@@ -56,6 +57,7 @@
     <script>
         $(function () {
             $('#HojaLista').hide();
+            $('#CampoForaneo').hide();
             $('#IdTipo').change(function () {
                 var selectVal = $("#IdTipo option:selected").val();
                 if (selectVal == "6") {
@@ -64,6 +66,14 @@
                 } else {
                     $('#HojaLista').hide();
                 }
+
+                if (selectVal == "8") {
+                    $('#CampoForaneo').show();
+                    $("#Calculo").val(selectVal);
+                } else {
+                    $('#CampoForaneo').hide();
+                }
+
             });
         });
     </script>

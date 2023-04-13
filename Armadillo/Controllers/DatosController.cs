@@ -60,7 +60,21 @@ namespace Armadillo.Controllers
                 dato.IdCampo =campo.idCampo/*hay que buscarlo*/;
                 dato.Indice =campocompleto.Indice/*del mismo campo se trae*/;
                 dato.NoFila = noFila;
-                dato.Valor = campo.valor;
+
+                if (campocompleto.IdTipo==8) {/*es un Campo Foráneo*/
+                    var campoConocer = _context.Campo.AsNoTracking().Single(d=>d.Id==campo.idCampo);
+                    var hojaMadre = _context.Hoja.Include(c => c.Campos).Single(d=>d.Id==campoConocer.IdHoja);
+                    var campoClave = hojaMadre.Campos.Single(d=>d.IdTipo==7);
+                    var resolucion = datos.Single(d=>d.idCampo==campoClave.Id);
+                    /*traer los valores*/
+                    var tupla = resolucion.valor.Split(",");
+                    int idHojaForanea = Convert.ToInt16(tupla[0]);
+                    int noFilaForanea = Convert.ToInt16(tupla[1]);
+                    int idcampoForaneo = Convert.ToInt16(campoConocer.Calculo);
+                    var DatoForaneo = _context.Dato.AsNoTracking().Include(d=>d.Campo).Single(d=>d.Campo.IdHoja==idHojaForanea && d.NoFila==noFilaForanea && d.Campo.Id== idcampoForaneo);
+                    dato.Valor = DatoForaneo.Valor;
+                }else
+                    dato.Valor = campo.valor;
                 _context.Add(dato);
             }
             await _context.SaveChangesAsync();
@@ -155,7 +169,7 @@ namespace Armadillo.Controllers
                     .OrderBy(d => d.Indice)
                     .ToListAsync();
             }
-               
+            
             Contenido contenido = new Contenido();
             contenido.Campos = cabeceras;
             contenido.Datos = EjecutarFormula(datos);
@@ -166,6 +180,26 @@ namespace Armadillo.Controllers
 
             return contenido;
         }
+
+
+        private List<Dato> LlenarCamposForaneos(List<Dato> datos)
+        {
+            foreach (var item in datos)
+            {
+                if (item.Campo.IdTipo == 8)/*para campos foráneos*/
+                {
+                    var fila = item.NoFila;
+                    var idCampoForaneo=Convert.ToInt32(item.Campo.Calculo);
+                    var datoForaneo = datos.Single(d=>d.NoFila==fila && d.Campo.IdTipo==7);/*el que contiene la tupla*/
+                    var tupla = datoForaneo.Valor.Split(',');
+                    var idHojaForanea = Convert.ToInt32(tupla[0]);
+                    var valorForaneo = _context.Dato.Include(d => d.Campo).Single(d => d.Campo.IdHoja == idHojaForanea && d.NoFila==fila && d.IdCampo== idCampoForaneo);
+                    item.Valor = valorForaneo.Valor;
+                }
+            }
+            return datos;
+        }
+
 
         /*Implementar para ingresar fórmulas*/
         private List<Dato> EjecutarFormula(List<Dato> datos)
