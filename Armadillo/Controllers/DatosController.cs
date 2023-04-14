@@ -71,7 +71,7 @@ namespace Armadillo.Controllers
                     int idHojaForanea = Convert.ToInt16(tupla[0]);
                     int noFilaForanea = Convert.ToInt16(tupla[1]);
                     int idcampoForaneo = Convert.ToInt16(campoConocer.Calculo);
-                    var DatoForaneo = _context.Dato.AsNoTracking().Include(d=>d.Campo).Single(d=>d.Campo.IdHoja==idHojaForanea && d.NoFila==noFilaForanea && d.Campo.Id== idcampoForaneo);
+                    var DatoForaneo = _context.Dato.AsNoTracking().Include(d=>d.Campo).Single(d=>d.NoFila==noFilaForanea && d.IdCampo== idcampoForaneo);
                     dato.Valor = DatoForaneo.Valor;
                 }else
                     dato.Valor = campo.valor;
@@ -155,9 +155,9 @@ namespace Armadillo.Controllers
                             .Dato
                             .AsNoTracking()
                             .Include(d => d.Campo)
-                            .FirstOrDefault(d => d.Campo.IdHoja == idHoja && d.NoFila == item);
+                            .Where(d => d.Campo.IdHoja == idHoja && d.NoFila == item).ToList();
                         if(datoFila != null)
-                            datos.Add(datoFila);
+                            datos.AddRange(datoFila);
                     }
                     datos = datos.OrderBy(d=>d.Indice).ToList();
                 }
