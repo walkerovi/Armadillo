@@ -128,42 +128,24 @@ namespace Armadillo.Controllers
         }
 
         // GET: Hojas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Hoja == null)
-            {
-                return NotFound();
-            }
-
-            var hoja = await _context.Hoja
-                .Include(h => h.Programa)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hoja == null)
-            {
-                return NotFound();
-            }
-
-            return View(hoja);
-        }
-
-        // POST: Hojas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int idHoja)
         {
             if (_context.Hoja == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Hoja'  is null.");
             }
-            var hoja = await _context.Hoja.FindAsync(id);
+            var hoja = await _context.Hoja.FindAsync(idHoja);
+            int IdPrograma = hoja.IdPrograma;
             if (hoja != null)
             {
                 _context.Hoja.Remove(hoja);
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { idPrograma = IdPrograma });
         }
+
 
         private bool HojaExists(int id)
         {

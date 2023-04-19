@@ -135,69 +135,44 @@ namespace Armadillo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(campo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CampoExists(campo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(campo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index), new { idHoja = campo.IdHoja });
             }
-            ViewData["IdHoja"] = new SelectList(_context.Hoja, "Id", "Id", campo.IdHoja);
-            ViewData["IdTipo"] = new SelectList(_context.Tipo, "Id", "Id", campo.IdTipo);
-            return View(campo);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CampoExists(campo.Id))
+                {
+                    return NotFound("El registro no fue encontrado");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         // GET: Campos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Campo == null)
-            {
-                return NotFound();
-            }
-
-            var campo = await _context.Campo
-                .Include(c => c.Hoja)
-                .Include(c => c.Tipo)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (campo == null)
-            {
-                return NotFound();
-            }
-
-            return View(campo);
-        }
-
-        // POST: Campos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int idCampo, int idHoja)
         {
             if (_context.Campo == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Campo'  is null.");
+                return Problem("no hay campos");
             }
-            var campo = await _context.Campo.FindAsync(id);
+            var campo = await _context.Campo.FindAsync(idCampo);
             if (campo != null)
             {
                 _context.Campo.Remove(campo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index), new { idHoja = campo.IdHoja });
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+                return BadRequest("No se encontró el registro");
         }
+
 
         private bool CampoExists(int id)
         {

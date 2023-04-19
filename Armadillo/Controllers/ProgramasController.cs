@@ -23,7 +23,7 @@ namespace Armadillo.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Programa != null ? 
-                          View(await _context.Programa.ToListAsync()) :
+                          View(await _context.Programa.AsNoTracking().Include(d=>d.Hojas).ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Programa'  is null.");
         }
 
@@ -115,27 +115,8 @@ namespace Armadillo.Controllers
         }
 
         // GET: Programas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Programa == null)
-            {
-                return NotFound();
-            }
-
-            var programa = await _context.Programa
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (programa == null)
-            {
-                return NotFound();
-            }
-
-            return View(programa);
-        }
-
-        // POST: Programas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int id)
         {
             if (_context.Programa == null)
             {
@@ -146,10 +127,11 @@ namespace Armadillo.Controllers
             {
                 _context.Programa.Remove(programa);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ProgramaExists(int id)
         {
