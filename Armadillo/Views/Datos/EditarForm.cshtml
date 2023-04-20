@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Armadillo.Models.Dato>
+
+@{
+    ViewData["Title"] = "EditarForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        Actualizar Datos
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                @foreach (var item in Model)
+                {
+                    <div class="form-group contenido">
+                        @{
+                            var tipo = "";
+                        }
+                        @if (item.Campo.IdTipo == 2 || item.Campo.IdTipo == 3 || item.Campo.IdTipo == 5)/*entero,decimal o cálculo*/
+                        {
+                            tipo = "number";
+                        }
+                        else
+                        {
+                            if (item.Campo.IdTipo == 4)/*fecha*/
+                            {
+                                tipo = "date";
+                            }
+                            else
+                            {
+                                if (item.Campo.IdTipo == 1)/*texto*/
+                                {
+                                    tipo = "text";
+                                }
+                                else
+                                {/*Es otra hoja enlazada*/
+                                    if (item.Campo.IdTipo == 6)
+                                    {
+                                        tipo = "Lista";
+                                    }
+                                    if (item.Campo.IdTipo == 7)
+                                    {
+                                        tipo = "Detalle";
+                                    }
+                                    if (item.Campo.IdTipo == 8)
+                                    {
+                                        tipo = "Foraneo";
+                                    }
+                                }
+                            }
+                        }
+
+                        @if (tipo == "Lista")
+                        {
+                            <p></p>
+                            <p>Lista de: @item.Campo.Nombre </p>
+                        }
+                        else
+                        {
+                            if (tipo == "Detalle")
+                            {
+                                <p></p>
+                                <p>Detalle </p>
+                                <input type="hidden" name="@item.Campo.Nombre" value="@item.Valor">
+                            }
+                            else
+                            {
+                                if (tipo == "Foraneo")
+                                {
+                                    <p></p>
+                                    <p>Campo Foráneo: @item.Campo.Nombre </p>
+                                }
+                                else
+                                {
+                                    <label for="@item.Campo.Nombre" class="control-label">@item.Campo.Nombre</label>
+                                    <input type="@tipo" id="@item.Campo.Nombre" name="@item.Campo.Nombre" value="@item.Valor" class="form-control" />
+                                }
+                            }
+                        }
+                        <input type="hidden" name="idDato" value="@item.Id">
+                    </div>
+            
+                }
+
+                <div class="form-group">
+                    <p></p>
+                    <input type="button" class="btn btn-primary" value="Actualizar" id="Actualizar" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#Actualizar").click(function () {
+            var filas = [];
+            $("div.contenido").each(function (index) {
+                var campo = {};
+                campo["idDato"] = $(this).find("input[name='idDato']").val();
+                campo["nombre"] = $(this).find("input").attr("name");
+                campo["valor"] = $(this).find("input").val();
+                filas.push(campo);
+            });
+            var procesado = JSON.stringify(filas);
+            $.post("@Url.Action("Editar","Datos")", procesado
+                , function (respuesta) {
+
+                });
+        });
+    </script>
+}

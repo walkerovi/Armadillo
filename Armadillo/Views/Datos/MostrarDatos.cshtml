@@ -33,7 +33,11 @@
                                 Nuevo
                             </a>
                         }
-                       
+                        <a href="@Url.ActionLink("MostrarDatos","Datos",new{idHoja=ViewBag.idHojaForanea, idHojaForanea = 0, noFilaForanea=0})" class="btn btn-primary p-2" data-toggle="tooltip" data-placement="bottom" title="Regresar al detalle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
+                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
+                            </svg>
+                        </a>
                     </div>
 
                 </div>
@@ -50,7 +54,7 @@
             <div class="card">
                 <div class="card-body">
                     <dl class="row">
-                        @for (int i = 0; i <= ViewBag.ContenidoForanea.Cantidadfila; i++)
+                        @for (int i = 1; i <= ViewBag.ContenidoForanea.Cantidadfila; i++)
                         {
                             @foreach (var dato in ((Contenido)ViewBag.ContenidoForanea).Datos.Where(d => d.NoFila == i))
                             {
@@ -102,10 +106,11 @@
                                                 @campo
                                             </th>
                                         }
+                                        @*<th></th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for (int i = 0; i <= Model.Cantidadfila; i++)
+                                    @for (int i = 1; i <= Model.Cantidadfila; i++)
                                     {
                                         <tr>
                                             @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
@@ -114,6 +119,11 @@
                                                     @dato.Valor
                                                 </td>
                                             }
+                                            @*<td>
+                                                <a href="#" class="btn btn-primary">
+                                                    Editar
+                                                </a>
+                                            </td>*@
                                         </tr>
                                     }
                                 </tbody>
@@ -135,10 +145,11 @@
                                 @campo
                             </th>
                         }
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i <= Model.Cantidadfila; i++)
+                    @for (int i = 1; i <= Model.Cantidadfila; i++)
                     {
                         <tr>
                             @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
@@ -146,16 +157,14 @@
                                 if (dato.Campo.IdTipo == 6)
                                 {
                                     <td>
-                                        <div class="d-flex flex-row-reverse">
-                                            <a href="@Url.Action("MostrarDatos","Datos",new{idHoja=dato.Campo.Calculo,idHojaForanea=dato.Campo.IdHoja,noFilaForanea=dato.NoFila})" class="btn btn-primary p-2">
+                                        <a href="@Url.Action("MostrarDatos","Datos",new{idHoja=dato.Campo.Calculo,idHojaForanea=dato.Campo.IdHoja,noFilaForanea=dato.NoFila})" class="btn btn-primary">
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-view-list" viewBox="0 0 16 16">
-                                                    <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
-                                                </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-view-list" viewBox="0 0 16 16">
+                                                <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
+                                            </svg>
                                             
-                                                @dato.Campo.Nombre
-                                            </a>
-                                        </div>
+                                            @dato.Campo.Nombre
+                                        </a>
                                     </td>
                                 }
                                 else
@@ -165,6 +174,11 @@
                                     </td>
                                 }
                             }
+                            <td>
+                                <a href="@Url.Action("EditarForm","Datos",new {idHoja=ViewBag.idHoja,noFila=i})" class="btn btn-primary">
+                                    Editar
+                                </a>
+                            </td>
                         </tr>
                     }
                 </tbody>

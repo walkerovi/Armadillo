@@ -225,6 +225,36 @@ namespace Armadillo.Controllers
             return datos;
         }
 
+        [HttpGet]
+        public IActionResult EditarForm(int idHoja, int noFila)
+        {
+            List<Dato> datos = _context
+                .Dato
+                .AsNoTracking()
+                .Include(d=>d.Campo)
+                .Where(d=>d.Campo.IdHoja==idHoja && d.NoFila==noFila).ToList();
+
+            return View(datos);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar()
+        {
+            var item = Request.Form.Keys.AsEnumerable().FirstOrDefault();
+            List<DatoJson> datos = JsonConvert.DeserializeObject<List<DatoJson>>(item);
+            foreach (DatoJson datojson in datos)
+            {
+                Dato dato = await _context.Dato.SingleAsync(d=>d.Id== datojson.idDato);
+                dato.Valor = datojson.valor;
+                _context.Update(dato);
+            }
+            await _context.SaveChangesAsync();
+            return Ok("Se Ha Actualizado");
+        }
+
+
+
+
         /*Generado por el framework*/
 
 
