@@ -87,6 +87,7 @@ namespace Armadillo.Controllers
             ViewBag.idHoja = idHoja;
             ViewBag.idHojaForanea = idHojaForanea;
             ViewBag.noFilaForanea = noFilaForanea;
+            ViewBag.IdPrograma = _context.Hoja.AsNoTracking().Single(d => d.Id == idHoja).IdPrograma;
             if (idHojaForanea > 0)
             {
                 Contenido contenidoForaneo = new Contenido();
@@ -193,7 +194,9 @@ namespace Armadillo.Controllers
                     var datoForaneo = datos.Single(d=>d.NoFila==fila && d.Campo.IdTipo==7);/*el que contiene la tupla*/
                     var tupla = datoForaneo.Valor.Split(',');
                     var idHojaForanea = Convert.ToInt32(tupla[0]);
-                    var valorForaneo = _context.Dato.Include(d => d.Campo).Single(d => d.Campo.IdHoja == idHojaForanea && d.NoFila==fila && d.IdCampo== idCampoForaneo);
+                    var valorForaneo = _context
+                        .Dato.Include(d => d.Campo)
+                        .Single(d => d.Campo.IdHoja == idHojaForanea && d.NoFila==fila && d.IdCampo== idCampoForaneo);
                     item.Valor = valorForaneo.Valor;
                 }
             }
@@ -252,11 +255,26 @@ namespace Armadillo.Controllers
             return Ok("Se Ha Actualizado");
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> Borrar(int idHoja, int noFilaForanea, int idHojaForanea = 0)
+        {
+            List<Dato> datos = _context
+                .Dato
+                .Include(d => d.Campo)
+                .Where(d => d.Campo.IdHoja == idHoja && d.NoFila == noFilaForanea).ToList();
+            if (datos.Count > 0)
+            {
+                foreach (var item in datos)
+                    _context.Remove(item);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(MostrarDatos), new { idHoja = idHoja, idHojaForanea= idHojaForanea, noFilaForanea= noFilaForanea });
+            }
+            else 
+                return BadRequest("No se encotró el registro");
+        }
 
 
         /*Generado por el framework*/
-
 
         // GET: Datos
         public async Task<IActionResult> Index()
