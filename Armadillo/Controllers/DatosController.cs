@@ -100,6 +100,15 @@ namespace Armadillo.Controllers
                 return View(await ObtenerContenido(idHoja));
         }
 
+        /*Select mostrar datos desde el hijo*/
+        [HttpGet]
+        public async Task<IActionResult> MostrarDatosSelect(int idHoja)
+        {
+            var contenido=await ObtenerContenido(idHoja, 0, 0);
+            return PartialView(contenido);
+        }
+
+
         private async Task<Contenido> ObtenerContenido(
             int idHoja, 
             int idHojaForanea=0,
