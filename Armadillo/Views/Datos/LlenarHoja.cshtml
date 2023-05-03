@@ -78,7 +78,12 @@
                             {
                                 <p></p>
                                 <p>Detalle </p>
-                                <input type="hidden" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
+                                <input type="hidden" id="@item.Nombre" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
+                                <input type="hidden" class="Calculo_Detalle" value="@item.Calculo">
+                                <button type="button" id="AbrirCatalogo" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Catalogo">
+                                  Cargar Hoja
+                                </button>
+
                             }else
                             {
                                 if (tipo == "Foraneo")
@@ -138,6 +143,7 @@
 
               });
         });
+
     </script>
 }
 
