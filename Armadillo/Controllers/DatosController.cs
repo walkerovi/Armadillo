@@ -102,10 +102,10 @@ namespace Armadillo.Controllers
 
         /*Select mostrar datos desde el hijo*/
         [HttpGet]
-        public async Task<IActionResult> MostrarDatosSelect(int idHoja)
+        public async Task<IActionResult> MostrarDatosSelect(int idHoja,string busqueda)
         {
             var contenido=await ObtenerContenido(idHoja, 0, 0);
-            return PartialView(contenido);
+            return PartialView(contenido.Datos.Where(d=>d.Valor.Contains(busqueda)));
         }
 
 

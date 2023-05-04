@@ -80,7 +80,7 @@
                                 <p>Detalle </p>
                                 <input type="hidden" id="@item.Nombre" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
                                 <input type="hidden" class="Calculo_Detalle" value="@item.Calculo">
-                                <button type="button" id="AbrirCatalogo" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Catalogo">
+                                <button type="button" class="btn btn-primary AbrirCatalogo" data-bs-toggle="modal" data-bs-target="#Catalogo">
                                   Cargar Hoja
                                 </button>
 
@@ -119,8 +119,12 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Busque y seleccione</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="MostrarCatalogo">
-                
+            <div class="modal-body">
+                <div class="btn-group" role="group" aria-label="Buscar">
+                    <input type="text" id="Busqueda" class="form-control"/>
+                    <button type="button" id="Buscar" class="btn-info">Buscar</button>
+                </div>
+                <div id="MostrarCatalogo"></div>
             </div>
         </div>
     </div>
@@ -128,6 +132,12 @@
 
 @section Scripts {
     <script>
+
+        $(function(){/*Init */
+            BusquedaDetalle();
+        });
+
+
         $("#Guardar").click(function(){
               var filas=[];
               $("div.contenido").each(function(index){
@@ -143,6 +153,21 @@
 
               });
         });
+
+        function BusquedaDetalle()
+        {
+            $("button.AbrirCatalogo").each(function(index){
+                $("button.AbrirCatalogo").eq(index).click(function(){
+                    var idHoja = $("input.Calculo_Detalle").eq(index).val();
+
+                });
+            });
+        }
+
+        function EjecutarBusqueda(idHoja,busqueda)
+        {
+            $.get("@Url.Action("MostrarDatosSelect","Datos")",{});
+        }
 
     </script>
 }
