@@ -105,7 +105,15 @@ namespace Armadillo.Controllers
         public async Task<IActionResult> MostrarDatosSelect(int idHoja,string busqueda)
         {
             var contenido=await ObtenerContenido(idHoja, 0, 0);
-            return PartialView(contenido.Datos.Where(d=>d.Valor.Contains(busqueda)));
+            List<Dato> obtenerFilas = contenido.Datos.Where(d => d.Valor.Contains(busqueda)).ToList();
+            List<Dato> datosFiltrados = new List<Dato>();
+            foreach (var item in obtenerFilas)
+            {
+                List<Dato> dato = contenido.Datos.Where(d=>d.NoFila==item.NoFila).ToList();
+                datosFiltrados.AddRange(dato);
+            }
+            contenido.Datos = datosFiltrados;
+            return PartialView(contenido);
         }
 
 

@@ -78,7 +78,7 @@
                             {
                                 <p></p>
                                 <p>Detalle </p>
-                                <input type="hidden" id="@item.Nombre" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
+                                <input type="hidden" id="@item.Nombre" class="Detalle" name="@item.Nombre" value="@ViewBag.idHojaForanea,@ViewBag.noFilaForanea">
                                 <input type="hidden" class="Calculo_Detalle" value="@item.Calculo">
                                 <button type="button" class="btn btn-primary AbrirCatalogo" data-bs-toggle="modal" data-bs-target="#Catalogo">
                                   Cargar Hoja
@@ -122,7 +122,7 @@
             <div class="modal-body">
                 <div class="btn-group" role="group" aria-label="Buscar">
                     <input type="text" id="Busqueda" class="form-control"/>
-                    <button type="button" id="Buscar" class="btn-info">Buscar</button>
+                    <button type="button" id="Buscar" class="btn btn-info">Buscar</button>
                 </div>
                 <div id="MostrarCatalogo"></div>
             </div>
@@ -159,14 +159,37 @@
             $("button.AbrirCatalogo").each(function(index){
                 $("button.AbrirCatalogo").eq(index).click(function(){
                     var idHoja = $("input.Calculo_Detalle").eq(index).val();
-
+                    EjecutarBusqueda(idHoja, index);
                 });
             });
         }
 
-        function EjecutarBusqueda(idHoja,busqueda)
+        function EjecutarBusqueda(idHoja, indexExterno) {
+            $("#Buscar").click(function(){
+                var busqueda=$("#Busqueda").val();
+                $.get("@Url.Action("MostrarDatosSelect","Datos")", 
+                { idHoja: idHoja, busqueda: busqueda },
+                function(tabla){
+                        $("#MostrarCatalogo").html(tabla);
+                        SeleccionarFila(idHoja, indexExterno);
+                });
+            });
+        }
+
+        function SeleccionarFila(idHoja, indexExterno) {
+            $("a.seleccionarFila").each(function(index){
+                $("a.seleccionarFila").eq(index).click(function(){
+                    var fila = $("input.valorFilaSeleccionada").eq(index).val();
+                    $("input.Detalle").eq(indexExterno).val(idHoja + "," + fila);
+                    ResetModal();
+                });
+            });
+        }
+
+        function ResetModal()
         {
-            $.get("@Url.Action("MostrarDatosSelect","Datos")",{});
+            $("#Busqueda").val("");
+            $('#Catalogo').modal('hide');
         }
 
     </script>
