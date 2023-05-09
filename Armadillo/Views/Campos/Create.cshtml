@@ -74,7 +74,7 @@
 
                 if (selectVal == "8") {
                     $('#CampoForaneo').show();
-                    $("#Calculo").val(selectVal);
+                    CambiarCampoForaneo();
                 } else {
                     $('#CampoForaneo').hide();
                 }
@@ -83,11 +83,17 @@
         }
         function CambiarTipoLista()
         {
-            console.log("Estoy dentro");
             $('#IdHojaForanea').change(function () {
                 var hojaselect = $("#IdHojaForanea option:selected").val();
-                console.log(hojaselect);
                 $("#Calculo").val(hojaselect);
+            });
+        }
+
+        function CambiarCampoForaneo()
+        {
+            $('#IdCampoForaneo').change(function () {
+                var idCampoForaneo = $("#IdCampoForaneo option:selected").val();
+                $("#Calculo").val(idCampoForaneo);
             });
         }
 

@@ -71,7 +71,11 @@ namespace Armadillo.Controllers
                     int idHojaForanea = Convert.ToInt16(tupla[0]);
                     int noFilaForanea = Convert.ToInt16(tupla[1]);
                     int idcampoForaneo = Convert.ToInt16(campoConocer.Calculo);
-                    var DatoForaneo = _context.Dato.AsNoTracking().Include(d=>d.Campo).Single(d=>d.NoFila==noFilaForanea && d.IdCampo== idcampoForaneo);
+                    var DatoForaneo = _context
+                        .Dato
+                        .AsNoTracking()
+                        .Include(d=>d.Campo)
+                        .Single(d=>d.NoFila==noFilaForanea && d.Campo.IdHoja==idHojaForanea && d.IdCampo== idcampoForaneo);
                     dato.Valor = DatoForaneo.Valor;
                 }else
                     dato.Valor = campo.valor;

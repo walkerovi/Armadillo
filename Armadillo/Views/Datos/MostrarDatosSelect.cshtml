@@ -17,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        @for (int i = 1; i <= Model.Cantidadfila; i++)
+        @for (int i = 1; i < Model.Cantidadfila; i++)
         {
             <tr>
                 @foreach (var dato in Model.Datos.Where(d => d.NoFila == i))
